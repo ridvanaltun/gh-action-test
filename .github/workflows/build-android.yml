@@ -23,7 +23,7 @@ jobs:
           private-key-name: bitbucket
           
       - name: Clone Bitbucket repository
-        run: git clone git@bitbucket.org:ridvanaltun/card-collection.git
+        run: git clone git@bitbucket.org:ridvanaltun/card-collection.git .
 
       # Gradle Cache https://github.com/actions/cache/blob/main/examples.md#java---gradle
       - uses: actions/cache@v2
