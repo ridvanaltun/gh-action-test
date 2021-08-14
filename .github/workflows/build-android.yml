@@ -77,10 +77,11 @@ jobs:
         
       - name: Extract versionName & versionCode and rename output
         run: |
-          echo "APP_VERSION_CODE=$(java -jar bundletool.jar dump manifest --bundle android/app/build/outputs/bundle/release/app-release.aab --xpath /manifest/@android:versionCode)" >> $GITHUB_ENV
-          echo "APP_VERSION_NAME=$(java -jar bundletool.jar dump manifest --bundle android/app/build/outputs/bundle/release/app-release.aab --xpath /manifest/@android:versionName)" >> $GITHUB_ENV
-          echo "OUTPUT_NAME=card-collection-v${{ env.APP_VERSION_NAME }}-build-${{ env.APP_VERSION_CODE }}" >> $GITHUB_ENV
-          mv android/app/build/outputs/bundle/release/app-release.aab android/app/build/outputs/bundle/release/${{ env.OUTPUT_NAME }}.aab
+          APP_VERSION_CODE=$(java -jar bundletool.jar dump manifest --bundle android/app/build/outputs/bundle/release/app-release.aab --xpath /manifest/@android:versionCode)
+          APP_VERSION_NAME=$(java -jar bundletool.jar dump manifest --bundle android/app/build/outputs/bundle/release/app-release.aab --xpath /manifest/@android:versionName)
+          OUTPUT_NAME=card-collection-v$APP_VERSION_NAME-build-$APP_VERSION_CODE
+          echo "OUTPUT_NAME=$OUTPUT_NAME" >> $GITHUB_ENV
+          mv android/app/build/outputs/bundle/release/app-release.aab android/app/build/outputs/bundle/release/$OUTPUT_NAME.aab
         
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
