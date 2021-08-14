@@ -24,6 +24,21 @@ jobs:
           
       - name: Clone Bitbucket repository
         run: git clone git@bitbucket.org:ridvanaltun/card-collection.git .
+        
+      - name: Set Release Keystore File
+        run: |
+          echo "${{ secrets.RELEASE_KEYSTORE }}" > release.keystore.asc
+          gpg -d --passphrase "${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}" --batch release.keystore.asc > app/release.keystore
+          
+      - name: Set Release Properties
+        run: |
+          echo "${{ secrets.RELEASE_PROPERTIES }}" > release.properties.asc
+          gpg -d --passphrase "${{ secrets.RELEASE_PROPERTIES_PASSPHRASE }}" --batch release.properties.asc > android/release.properties
+          
+      - name: Set Environment File
+        run: |
+          echo "${{ secrets.ENVIRONMENT }}" > environment.asc
+          gpg -d --passphrase "${{ secrets.ENVIRONMENT_PASSPHRASE }}" --batch environment.asc > .env
 
       # Gradle Cache https://github.com/actions/cache/blob/main/examples.md#java---gradle
       - uses: actions/cache@v2
