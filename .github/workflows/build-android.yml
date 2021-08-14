@@ -69,23 +69,21 @@ jobs:
       - name: Bundle *.aab
         run: cd android && ./gradlew bundleRelease
         
-      #- name: Bundle *.apk
-      #  run: cd android && ./gradlew assembleRelease
+      - name: Download bundletool
+        run: curl -L https://github.com/google/bundletool/releases/download/1.8.0/bundletool-all-1.8.0.jar --output bundletool.jar
         
-      - name: Extract versionName & versionCode
+      #- name: Create apks from bundle file for debugging
+      #  run: java -jar bundletool.jar build-apks --bundle=android/app/build/outputs/bundle/release/app-release.aab --output=app-debug.apks
+        
+      - name: Extract versionName & versionCode and rename output
         run: |
-          curl -L https://github.com/google/bundletool/releases/download/1.8.0/bundletool-all-1.8.0.jar --output bundletool.jar
           echo "APP_VERSION_CODE=$(java -jar bundletool.jar dump manifest --bundle android/app/build/outputs/bundle/release/app-release.aab --xpath /manifest/@android:versionCode)" >> $GITHUB_ENV
           echo "APP_VERSION_NAME=$(java -jar bundletool.jar dump manifest --bundle android/app/build/outputs/bundle/release/app-release.aab --xpath /manifest/@android:versionName)" >> $GITHUB_ENV
+          echo "OUTPUT_NAME=$(echo card-collection-v$APP_VERSION_NAME-build-$APP_VERSION_CODE)" >> $GITHUB_ENV
+          mv android/app/build/outputs/bundle/release/app-release.aab mv android/app/build/outputs/bundle/release/$OUTPUT_NAME.aab
         
       - name: Upload Artifact (aab)
         uses: actions/upload-artifact@v1
         with:
-          name: card-collection-v${{ env.APP_VERSION_NAME }}-${{ env.APP_VERSION_CODE }}-aab
-          path: android/app/build/outputs/bundle/release/app-release.aab
-
-      #- name: Upload Artifact (apk)
-      #  uses: actions/upload-artifact@v1
-      #  with:
-      #    name: card-collection-v${{ env.APP_VERSION_NAME }}-${{ env.APP_VERSION_CODE }}-apk
-      #    path: android/app/build/outputs/apk/release/app-release.apk
+          name: ${{ env.OUTPUT_NAME }}-aab
+          path: android/app/build/outputs/bundle/release/${{ env.OUTPUT_NAME }}.aab
