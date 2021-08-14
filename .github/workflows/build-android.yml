@@ -27,16 +27,19 @@ jobs:
         
       - name: Set Release Keystore File
         run: |
+          touch app/release.keystore
           echo "${{ secrets.RELEASE_KEYSTORE }}" > release.keystore.asc
           gpg -d --passphrase "${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}" --batch release.keystore.asc > app/release.keystore
           
       - name: Set Release Properties
         run: |
+          touch android/release.properties
           echo "${{ secrets.RELEASE_PROPERTIES }}" > release.properties.asc
           gpg -d --passphrase "${{ secrets.RELEASE_PROPERTIES_PASSPHRASE }}" --batch release.properties.asc > android/release.properties
           
       - name: Set Environment File
         run: |
+          touch .env
           echo "${{ secrets.ENVIRONMENT }}" > environment.asc
           gpg -d --passphrase "${{ secrets.ENVIRONMENT_PASSPHRASE }}" --batch environment.asc > .env
 
