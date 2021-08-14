@@ -80,9 +80,9 @@ jobs:
           echo "APP_VERSION_CODE=$(java -jar bundletool.jar dump manifest --bundle android/app/build/outputs/bundle/release/app-release.aab --xpath /manifest/@android:versionCode)" >> $GITHUB_ENV
           echo "APP_VERSION_NAME=$(java -jar bundletool.jar dump manifest --bundle android/app/build/outputs/bundle/release/app-release.aab --xpath /manifest/@android:versionName)" >> $GITHUB_ENV
           echo "OUTPUT_NAME=$(echo card-collection-v$APP_VERSION_NAME-build-$APP_VERSION_CODE)" >> $GITHUB_ENV
-          mv android/app/build/outputs/bundle/release/app-release.aab mv android/app/build/outputs/bundle/release/$OUTPUT_NAME.aab
+          mv android/app/build/outputs/bundle/release/app-release.aab android/app/build/outputs/bundle/release/$OUTPUT_NAME.aab
         
-      - name: Upload Artifact (aab)
+      - name: Upload Artifact
         uses: actions/upload-artifact@v1
         with:
           name: ${{ env.OUTPUT_NAME }}-aab
